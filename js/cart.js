@@ -38,7 +38,6 @@
     badges.forEach(badge => {
       if (badge) {
         badge.textContent = total;
-        badge.style.display = total > 0 ? '' : '';
       }
     });
   }
@@ -84,7 +83,13 @@
 
       if (totalEl) totalEl.textContent = '$' + getTotalPrice();
       if (totalContainer) totalContainer.classList.remove('d-none');
-      if (checkoutBtn) checkoutBtn.classList.remove('d-none');
+      if (checkoutBtn) {
+        checkoutBtn.classList.remove('d-none');
+        // Redirigir al checkout
+        checkoutBtn.onclick = function () {
+          window.location.href = 'checkout.html';
+        };
+      }
 
       // Asignar eventos a los botones dentro del offcanvas
       container.querySelectorAll('.cart-increase').forEach(btn => {
