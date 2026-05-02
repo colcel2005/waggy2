@@ -17,7 +17,7 @@
   <link rel="stylesheet" type="text/css" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
   <!-- PayPal SDK Sandbox -->
-  <script src="https://www.paypal.com/sdk/js?client-id=AXCzuQS2WTqlxZPaMp1VsodkCUd8ja1IHG4eQW7o9L5Oip96K6RWhQKQGKK4RAel0UU4ueYvnSeiKMKg&currency=USD" data-sdk-integration-source="button-factory"></script>
+  <script src="https://www.paypal.com/sdk/js?client-id=YOUR-SANDBOX-CLIENT-ID&currency=USD" data-sdk-integration-source="button-factory"></script>
   <style>
     .whatsapp-float {
       position: fixed; bottom: 20px; right: 20px; background-color: #25D366; color: white; border-radius: 50%;
@@ -192,7 +192,7 @@
 
           <!-- Mensaje de éxito -->
           <div id="order-success" class="alert alert-success mt-3 d-none">
-            Thank you! Your order has been placed successfully. You will be redirected to the home page shortly.
+            Thank you! Your order has been authorized and will be processed shortly. You will be redirected to the home page.
           </div>
         </div>
       </div>
@@ -300,7 +300,7 @@
       const orderItemsDiv = document.getElementById('order-items');
       const orderTotalSpan = document.getElementById('order-total');
 
-      // Mostrar resumen
+      // Mostrar resumen del carrito
       if (cart.length === 0) {
         if (emptyDiv) emptyDiv.classList.remove('d-none');
         if (contentDiv) contentDiv.classList.add('d-none');
@@ -341,7 +341,7 @@
       function showPayPalButton() {
         if (!paypalContainer || cart.length === 0) return;
         paypalContainer.innerHTML = ''; // Limpiar previo
-        // Renderizar botón PayPal
+        // Renderizar botón PayPal con intent = authorize
         paypal.Buttons({
           style: {
             layout: 'vertical',
@@ -349,9 +349,10 @@
             shape: 'rect',
             label: 'paypal'
           },
-          // Crear orden (SIN ITEMS para evitar errores de validación)
+          // Crear orden para autorización (no captura)
           createOrder: function(data, actions) {
             return actions.order.create({
+              intent: 'AUTHORIZE',  // Cambio clave para evitar el error de token de comprador
               purchase_units: [{
                 amount: {
                   value: total.toFixed(2),
@@ -361,9 +362,9 @@
               }]
             });
           },
-          // Capturar orden
+          // La aprobación solo autoriza, no captura
           onApprove: function(data, actions) {
-            return actions.order.capture().then(function(details) {
+            return actions.order.authorize().then(function(details) {
               // Éxito
               localStorage.removeItem(CART_KEY);
               if (successMsg) successMsg.classList.remove('d-none');
@@ -384,7 +385,6 @@
         if (cardPayBtn) cardPayBtn.classList.remove('d-none');
         if (cardPayBtn) {
           cardPayBtn.onclick = function() {
-            // Simular pago con tarjeta
             const name = document.getElementById('name').value.trim();
             const email = document.getElementById('email').value.trim();
             const address = document.getElementById('address').value.trim();
@@ -410,7 +410,6 @@
           } else if (this.value === 'card') {
             showCardPayButton();
           }
-          // COD no muestra botón adicional
         });
       });
 
