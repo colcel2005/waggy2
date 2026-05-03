@@ -16,6 +16,8 @@
   <link rel="stylesheet" type="text/css" href="css/vendor.css">
   <link rel="stylesheet" type="text/css" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  <!-- PayPal SDK Sandbox -->
+  <script src="https://www.paypal.com/sdk/js?client-id=AXCzuQS2WTqlxZPaMp1VsodkCUd8ja1IHG4eQW7o9L5Oip96K6RWhQKQGKK4RAel0UU4ueYvnSeiKMKg&currency=USD&intent=capture" data-sdk-integration-source="button-factory"></script>
   <style>
     .whatsapp-float {
       position: fixed; bottom: 20px; right: 20px; background-color: #25D366; color: white; border-radius: 50%;
@@ -34,6 +36,7 @@
 <body>
   <div class="preloader-wrapper"><div class="preloader"></div></div>
 
+  <!-- Header -->
   <header>
     <div class="container py-2">
       <div class="row py-4 pb-0 pb-sm-4 align-items-center">
@@ -57,6 +60,7 @@
             <li><a href="account.html" class="mx-3"><iconify-icon icon="healthicons:person" class="fs-4"></iconify-icon></a></li>
             <li><a href="wishlist.html" class="mx-3"><iconify-icon icon="mdi:heart" class="fs-4"></iconify-icon></a></li>
             <li><a href="#" class="mx-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasCart"><iconify-icon icon="mdi:cart" class="fs-4"></iconify-icon><span class="position-absolute translate-middle badge rounded-circle bg-primary pt-2">0</span></a></li>
+            <li><a href="#" class="mx-3" data-bs-toggle="offcanvas" data-bs-target="#offcanvasSearch"><iconify-icon icon="tabler:search" class="fs-4"></iconify-icon></a></li>
           </ul>
         </div>
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"><span class="navbar-toggler-icon"></span></button>
@@ -67,6 +71,7 @@
               <li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
               <li class="nav-item"><a href="faq.html" class="nav-link">FAQ</a></li>
               <li class="nav-item"><a href="index.html#clothing" class="nav-link">Shop</a></li>
+              <li class="nav-item"><a href="index.html#latest-blog" class="nav-link">Blog</a></li>
               <li class="nav-item"><a href="contact.html" class="nav-link">Contact</a></li>
             </ul>
           </div>
@@ -75,6 +80,7 @@
     </div>
   </header>
 
+  <!-- Checkout -->
   <section class="container py-5 my-5">
     <h1 class="mb-4">Checkout</h1>
     <div id="checkout-empty" class="d-none"><p>Your cart is empty.</p><a href="index.html" class="btn btn-primary">Continue Shopping</a></div>
@@ -91,41 +97,41 @@
             <div class="mb-3"><input type="text" class="form-control" id="name" placeholder="Full Name" required></div>
             <div class="mb-3"><input type="email" class="form-control" id="email" placeholder="Email" required></div>
             <div class="mb-3"><input type="text" class="form-control" id="address" placeholder="Address" required></div>
+            <div class="row"><div class="col"><input type="text" class="form-control" id="city" placeholder="City" required></div><div class="col"><input type="text" class="form-control" id="zip" placeholder="ZIP Code" required></div></div>
           </form>
-
           <h4 class="mt-4">Payment Method</h4>
           <div class="payment-methods">
-            <label class="payment-method w-100 mb-3">
-              <input type="radio" name="paymentMethod" value="paypal" checked>
-              <div class="card p-3"><div class="d-flex align-items-center"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg" width="60" class="me-3" alt="PayPal"><div>PayPal</div></div></div>
-            </label>
-            <label class="payment-method w-100 mb-3">
-              <input type="radio" name="paymentMethod" value="card">
-              <div class="card p-3"><div class="d-flex align-items-center"><img src="https://img.icons8.com/color/48/000000/visa.png" width="40" class="me-3" alt="Visa"><img src="https://img.icons8.com/color/48/000000/mastercard.png" width="40" class="me-3" alt="MasterCard"><div>Credit/Debit Card (demo)</div></div></div>
-            </label>
-            <label class="payment-method w-100 mb-3">
-              <input type="radio" name="paymentMethod" value="cod">
-              <div class="card p-3"><div class="d-flex align-items-center"><iconify-icon icon="mdi:cash" width="40" class="me-3 fs-2"></iconify-icon><div>Cash on Delivery</div></div></div>
-            </label>
+            <label class="payment-method w-100 mb-3"><input type="radio" name="paymentMethod" value="paypal" checked><div class="card p-3"><div class="d-flex align-items-center"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg" width="60" class="me-3" alt="PayPal"><div>PayPal</div></div></div></label>
+            <label class="payment-method w-100 mb-3"><input type="radio" name="paymentMethod" value="card"><div class="card p-3"><div class="d-flex align-items-center"><img src="https://img.icons8.com/color/48/000000/visa.png" width="40" class="me-3" alt="Visa"><img src="https://img.icons8.com/color/48/000000/mastercard.png" width="40" class="me-3" alt="MasterCard"><div>Credit/Debit Card (demo)</div></div></div></label>
+            <label class="payment-method w-100 mb-3"><input type="radio" name="paymentMethod" value="cod"><div class="card p-3"><div class="d-flex align-items-center"><iconify-icon icon="mdi:cash" width="40" class="me-3 fs-2"></iconify-icon><div>Cash on Delivery</div></div></div></label>
           </div>
-
           <div id="paypal-button-container" class="mt-3"></div>
           <button id="card-pay-btn" class="btn btn-dark btn-lg w-100 mt-3 d-none">Pay with Card (demo)</button>
-          <button id="cod-pay-btn" class="btn btn-dark btn-lg w-100 mt-3 d-none">Confirm Cash on Delivery</button>
-          <div id="order-success" class="alert alert-success mt-3 d-none">Thank you! Your order has been placed successfully. You will be redirected shortly.</div>
+          <div id="order-success" class="alert alert-success mt-3 d-none">Thank you! Your order has been placed successfully.</div>
         </div>
       </div>
     </div>
   </section>
 
+  <!-- Footer -->
   <footer id="footer" class="my-5">
-    <div class="container py-5"><div class="row"><div class="col text-center"><p>© 2023 Waggy. All rights reserved.</p></div></div></div>
+    <div class="container py-5 my-5">
+      <div class="row">
+        <div class="col-md-3"><div class="footer-menu"><img src="images/logo.png" alt="logo"><p class="blog-paragraph fs-6 mt-3">Subscribe to our newsletter.</p></div></div>
+        <div class="col-md-3"><h3>Quick Links</h3><ul class="list-unstyled"><li><a href="index.html">Home</a></li><li><a href="contact.html">Contact</a></li></ul></div>
+        <div class="col-md-3"><h3>Help</h3><ul class="list-unstyled"><li><a href="faq.html">FAQ</a></li><li><a href="returns.html">Returns</a></li><li><a href="shipping.html">Shipping</a></li><li><a href="privacy.html">Privacy</a></li><li><a href="terms.html">Terms</a></li></ul></div>
+        <div class="col-md-3"><h3>Newsletter</h3><div class="search-bar border rounded-pill px-2"><form><input type="text" class="form-control border-0 bg-transparent" placeholder="Enter your email" /></form></div></div>
+      </div>
+    </div>
   </footer>
 
   <a href="https://wa.me/1234567890" target="_blank" class="whatsapp-float"><iconify-icon icon="ri:whatsapp-fill" style="color:white;font-size:32px;"></iconify-icon></a>
 
   <script src="js/jquery-1.11.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="js/plugins.js"></script>
+  <script src="js/script.js"></script>
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
   <script>
     const CART_KEY = 'waggy_cart';
@@ -134,54 +140,32 @@
 
     if (!cart.length) {
       document.getElementById('checkout-empty').classList.remove('d-none');
+      document.getElementById('checkout-content').classList.add('d-none');
     } else {
       document.getElementById('checkout-content').classList.remove('d-none');
-      document.getElementById('order-items').innerHTML = cart.map(i =>
-        `<div class="d-flex align-items-center mb-2"><img src="${i.image}" width="50" class="me-3 rounded"><div><h6>${i.name}</h6><small>$${i.price} x ${i.quantity}</small></div><strong class="ms-auto">$${(i.price*i.quantity).toFixed(2)}</strong></div>`
-      ).join('');
+      document.getElementById('order-items').innerHTML = cart.map(i => `<div class="d-flex align-items-center mb-2"><img src="${i.image}" width="50" class="me-3 rounded"><div><h6>${i.name}</h6><small>$${i.price} x ${i.quantity}</small></div><strong class="ms-auto">$${(i.price*i.quantity).toFixed(2)}</strong></div>`).join('');
       document.getElementById('order-total').textContent = '$' + total.toFixed(2);
     }
 
-    function completeOrder(method) {
+    function completeOrder() {
       localStorage.removeItem(CART_KEY);
       document.getElementById('order-success').classList.remove('d-none');
-      document.getElementById('paypal-button-container').classList.add('d-none');
-      document.getElementById('card-pay-btn').classList.add('d-none');
-      document.getElementById('cod-pay-btn').classList.add('d-none');
-      setTimeout(() => window.location.href = 'index.html', 2500);
+      setTimeout(() => window.location.href = 'index.html', 2000);
     }
 
-    // PayPal simulado funcional
-    const paypalContainer = document.getElementById('paypal-button-container');
-    paypalContainer.innerHTML = `
-      <button id="paypal-sim-btn" class="btn btn-warning btn-lg w-100">
-        <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg" width="60" class="me-2"> Pay with PayPal (demo)
-      </button>`;
-    document.getElementById('paypal-sim-btn').addEventListener('click', () => {
-      if (confirm('Simulate successful PayPal payment?')) {
-        completeOrder('paypal');
-      }
-    });
+    document.getElementById('card-pay-btn').onclick = completeOrder;
 
-    // Tarjeta demo
-    const cardBtn = document.getElementById('card-pay-btn');
-    cardBtn.addEventListener('click', () => completeOrder('card'));
-
-    // Contra entrega
-    const codBtn = document.getElementById('cod-pay-btn');
-    codBtn.addEventListener('click', () => completeOrder('cod'));
-
-    // Cambio de método de pago
-    document.getElementsByName('paymentMethod').forEach(radio => {
-      radio.addEventListener('change', function() {
-        paypalContainer.classList.add('d-none');
-        cardBtn.classList.add('d-none');
-        codBtn.classList.add('d-none');
-        if (this.value === 'paypal') paypalContainer.classList.remove('d-none');
-        else if (this.value === 'card') cardBtn.classList.remove('d-none');
-        else if (this.value === 'cod') codBtn.classList.remove('d-none');
-      });
-    });
+    if (cart.length) {
+      paypal.Buttons({
+        style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' },
+        createOrder: (data, actions) => actions.order.create({
+          intent: 'CAPTURE',
+          purchase_units: [{ amount: { value: total.toFixed(2), currency_code: 'USD' }, description: 'Waggy Order' }]
+        }),
+        onApprove: (data, actions) => actions.order.capture().then(completeOrder),
+        onError: err => alert('PayPal error. Try again.')
+      }).render('#paypal-button-container');
+    }
   </script>
 </body>
 </html>
