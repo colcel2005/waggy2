@@ -16,8 +16,6 @@
   <link rel="stylesheet" type="text/css" href="css/vendor.css">
   <link rel="stylesheet" type="text/css" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Chilanka&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
-  <!-- PayPal SDK Sandbox (SIN hosted-fields) -->
-  <script src="https://www.paypal.com/sdk/js?client-id=YOUR-SANDBOX-CLIENT-ID&currency=USD&intent=capture" data-sdk-integration-source="button-factory"></script>
   <style>
     .whatsapp-float {
       position: fixed; bottom: 20px; right: 20px; background-color: #25D366; color: white; border-radius: 50%;
@@ -36,7 +34,6 @@
 <body>
   <div class="preloader-wrapper"><div class="preloader"></div></div>
 
-  <!-- Header -->
   <header>
     <div class="container py-2">
       <div class="row py-4 pb-0 pb-sm-4 align-items-center">
@@ -78,7 +75,6 @@
     </div>
   </header>
 
-  <!-- Checkout -->
   <section class="container py-5 my-5">
     <h1 class="mb-4">Checkout</h1>
     <div id="checkout-empty" class="d-none"><p>Your cart is empty.</p><a href="index.html" class="btn btn-primary">Continue Shopping</a></div>
@@ -96,23 +92,38 @@
             <div class="mb-3"><input type="email" class="form-control" id="email" placeholder="Email" required></div>
             <div class="mb-3"><input type="text" class="form-control" id="address" placeholder="Address" required></div>
           </form>
+
           <h4 class="mt-4">Payment Method</h4>
-          <div id="paypal-button-container"></div>
-          <div id="order-success" class="alert alert-success mt-3 d-none">Thank you! Your order has been placed successfully.</div>
+          <div class="payment-methods">
+            <label class="payment-method w-100 mb-3">
+              <input type="radio" name="paymentMethod" value="paypal" checked>
+              <div class="card p-3"><div class="d-flex align-items-center"><img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg" width="60" class="me-3" alt="PayPal"><div>PayPal</div></div></div>
+            </label>
+            <label class="payment-method w-100 mb-3">
+              <input type="radio" name="paymentMethod" value="card">
+              <div class="card p-3"><div class="d-flex align-items-center"><img src="https://img.icons8.com/color/48/000000/visa.png" width="40" class="me-3" alt="Visa"><img src="https://img.icons8.com/color/48/000000/mastercard.png" width="40" class="me-3" alt="MasterCard"><div>Credit/Debit Card (demo)</div></div></div>
+            </label>
+            <label class="payment-method w-100 mb-3">
+              <input type="radio" name="paymentMethod" value="cod">
+              <div class="card p-3"><div class="d-flex align-items-center"><iconify-icon icon="mdi:cash" width="40" class="me-3 fs-2"></iconify-icon><div>Cash on Delivery</div></div></div>
+            </label>
+          </div>
+
+          <div id="paypal-button-container" class="mt-3"></div>
+          <button id="card-pay-btn" class="btn btn-dark btn-lg w-100 mt-3 d-none">Pay with Card (demo)</button>
+          <button id="cod-pay-btn" class="btn btn-dark btn-lg w-100 mt-3 d-none">Confirm Cash on Delivery</button>
+          <div id="order-success" class="alert alert-success mt-3 d-none">Thank you! Your order has been placed successfully. You will be redirected shortly.</div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
   <footer id="footer" class="my-5">
     <div class="container py-5"><div class="row"><div class="col text-center"><p>© 2023 Waggy. All rights reserved.</p></div></div></div>
   </footer>
 
-  <!-- WhatsApp -->
   <a href="https://wa.me/1234567890" target="_blank" class="whatsapp-float"><iconify-icon icon="ri:whatsapp-fill" style="color:white;font-size:32px;"></iconify-icon></a>
 
-  <!-- Scripts -->
   <script src="js/jquery-1.11.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
@@ -131,38 +142,46 @@
       document.getElementById('order-total').textContent = '$' + total.toFixed(2);
     }
 
-    function completeOrder() {
+    function completeOrder(method) {
       localStorage.removeItem(CART_KEY);
       document.getElementById('order-success').classList.remove('d-none');
-      setTimeout(() => window.location.href = 'index.html', 2000);
+      document.getElementById('paypal-button-container').classList.add('d-none');
+      document.getElementById('card-pay-btn').classList.add('d-none');
+      document.getElementById('cod-pay-btn').classList.add('d-none');
+      setTimeout(() => window.location.href = 'index.html', 2500);
     }
 
-    if (cart.length && typeof paypal !== 'undefined') {
-      paypal.Buttons({
-        style: { layout: 'vertical', color: 'gold', shape: 'rect', label: 'paypal' },
-        createOrder: (data, actions) => {
-          return actions.order.create({
-            intent: 'CAPTURE',
-            purchase_units: [{
-              amount: { value: total.toFixed(2), currency_code: 'USD' },
-              description: 'Waggy Order'
-            }]
-          });
-        },
-        onApprove: (data, actions) => {
-          return actions.order.capture().then(function(details) {
-            completeOrder();
-          });
-        },
-        onCancel: () => {
-          alert('Payment was cancelled. Please try again if you wish to complete your order.');
-        },
-        onError: (err) => {
-          console.error('PayPal error:', err);
-          alert('An error occurred with PayPal. Please try again.');
-        }
-      }).render('#paypal-button-container');
-    }
+    // PayPal simulado funcional
+    const paypalContainer = document.getElementById('paypal-button-container');
+    paypalContainer.innerHTML = `
+      <button id="paypal-sim-btn" class="btn btn-warning btn-lg w-100">
+        <img src="https://www.paypalobjects.com/webstatic/mktg/logo/pp_cc_mark_111x69.jpg" width="60" class="me-2"> Pay with PayPal (demo)
+      </button>`;
+    document.getElementById('paypal-sim-btn').addEventListener('click', () => {
+      if (confirm('Simulate successful PayPal payment?')) {
+        completeOrder('paypal');
+      }
+    });
+
+    // Tarjeta demo
+    const cardBtn = document.getElementById('card-pay-btn');
+    cardBtn.addEventListener('click', () => completeOrder('card'));
+
+    // Contra entrega
+    const codBtn = document.getElementById('cod-pay-btn');
+    codBtn.addEventListener('click', () => completeOrder('cod'));
+
+    // Cambio de método de pago
+    document.getElementsByName('paymentMethod').forEach(radio => {
+      radio.addEventListener('change', function() {
+        paypalContainer.classList.add('d-none');
+        cardBtn.classList.add('d-none');
+        codBtn.classList.add('d-none');
+        if (this.value === 'paypal') paypalContainer.classList.remove('d-none');
+        else if (this.value === 'card') cardBtn.classList.remove('d-none');
+        else if (this.value === 'cod') codBtn.classList.remove('d-none');
+      });
+    });
   </script>
 </body>
 </html>
