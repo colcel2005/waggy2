@@ -51,71 +51,83 @@
 
     if (!container) return;
 
+    let html = '';
+
     if (cart.length === 0) {
-      container.innerHTML = '<div class="text-center py-5"><p class="text-muted">Your cart is empty</p></div>';
+      html += '<div class="text-center py-5"><p class="text-muted">Your cart is empty</p></div>';
       if (totalContainer) totalContainer.classList.add('d-none');
       if (checkoutBtn) checkoutBtn.classList.add('d-none');
     } else {
-      let html = '<ul class="list-group mb-3">';
+      html += '<ul class="list-group mb-3">';
       cart.forEach(item => {
         const subtotal = (item.price * item.quantity).toFixed(2);
         html += `
-          <li class="list-group-item d-flex justify-content-between lh-sm align-items-center">
+          <li class="list-group-item">
             <div class="d-flex align-items-center">
               <img src="${item.image}" alt="${item.name}" class="me-3 rounded" style="width: 50px; height: 50px; object-fit: cover;">
-              <div>
+              <div class="flex-grow-1">
                 <h6 class="my-0">${item.name}</h6>
                 <small class="text-body-secondary">$${item.price} x ${item.quantity}</small>
+                <div class="mt-2">
+                  <button class="btn btn-sm btn-outline-secondary cart-decrease" data-id="${item.id}">-</button>
+                  <span class="mx-2">${item.quantity}</span>
+                  <button class="btn btn-sm btn-outline-secondary cart-increase" data-id="${item.id}">+</button>
+                </div>
               </div>
-            </div>
-            <div class="d-flex align-items-center">
-              <button class="btn btn-sm btn-outline-secondary me-2 cart-decrease" data-id="${item.id}">-</button>
-              <span class="me-2">${item.quantity}</span>
-              <button class="btn btn-sm btn-outline-secondary me-3 cart-increase" data-id="${item.id}">+</button>
-              <span class="text-body-secondary">$${subtotal}</span>
-              <button class="btn btn-sm btn-outline-danger ms-3 cart-remove" data-id="${item.id}">&times;</button>
+              <div class="text-end">
+                <strong>$${subtotal}</strong>
+                <br>
+                <button class="btn btn-sm btn-outline-danger mt-2 cart-remove" data-id="${item.id}">
+                  <iconify-icon icon="mdi:close"></iconify-icon>
+                </button>
+              </div>
             </div>
           </li>`;
       });
       html += '</ul>';
 
-      container.innerHTML = html;
-
       if (totalEl) totalEl.textContent = '$' + getTotalPrice();
       if (totalContainer) totalContainer.classList.remove('d-none');
       if (checkoutBtn) {
         checkoutBtn.classList.remove('d-none');
-        // Redirigir al checkout
         checkoutBtn.onclick = function () {
           window.location.href = 'checkout.html';
         };
       }
-
-      // Asignar eventos a los botones dentro del offcanvas
-      container.querySelectorAll('.cart-increase').forEach(btn => {
-        btn.addEventListener('click', function (e) {
-          e.preventDefault();
-          const id = this.getAttribute('data-id');
-          increaseQuantity(id);
-        });
-      });
-
-      container.querySelectorAll('.cart-decrease').forEach(btn => {
-        btn.addEventListener('click', function (e) {
-          e.preventDefault();
-          const id = this.getAttribute('data-id');
-          decreaseQuantity(id);
-        });
-      });
-
-      container.querySelectorAll('.cart-remove').forEach(btn => {
-        btn.addEventListener('click', function (e) {
-          e.preventDefault();
-          const id = this.getAttribute('data-id');
-          removeItem(id);
-        });
-      });
     }
+
+    // Botón "Continue Shopping" siempre visible
+    html += `
+      <div class="text-center mt-3">
+        <button class="btn btn-outline-primary btn-lg rounded-1 w-100" id="btn-continue-shopping" data-bs-dismiss="offcanvas">Continue Shopping</button>
+      </div>`;
+
+    container.innerHTML = html;
+
+    // Asignar eventos a los botones dentro del offcanvas
+    container.querySelectorAll('.cart-increase').forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const id = this.getAttribute('data-id');
+        increaseQuantity(id);
+      });
+    });
+
+    container.querySelectorAll('.cart-decrease').forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const id = this.getAttribute('data-id');
+        decreaseQuantity(id);
+      });
+    });
+
+    container.querySelectorAll('.cart-remove').forEach(btn => {
+      btn.addEventListener('click', function (e) {
+        e.preventDefault();
+        const id = this.getAttribute('data-id');
+        removeItem(id);
+      });
+    });
 
     updateBadges();
   }
@@ -184,7 +196,7 @@
   renderCart();
   initAddToCartButtons();
 
-  // Re-inicializar botones después de cada actualización dinámica de Swiper/Isotope (si es necesario)
+  // Re-inicializar botones después de cada actualización dinámica de Swiper/Isotope
   window.addEventListener('load', () => {
     initAddToCartButtons();
   });
